@@ -1,0 +1,17 @@
+.product-list{
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    margin: auto;
+    width: 95%;
+    margin-top: 20px;
+}
+
+.product-container {
+    cursor: pointer;
+    border: 1px #ccc solid;
+    padding: 10px 0px;
+    width: 20%;
+    margin: 10px 43px;
+    border-radius: 5px;
+}

@@ -1,0 +1,22 @@
+<div class="product-container">
+
+    <div class="product-image">
+        <img [src]="getImagePath(product?.image)" alt="">
+    </div>
+
+
+<div class="product-body">
+    <div class="header-line">
+        <div class ="product-title">{{product?.name}}</div>
+    </div>
+
+
+<div class="details">
+    Rs: {{product?.price}}
+</div>
+
+<div class="details">
+    In Stock: {{product?.inStock}}
+</div>
+</div>
+</div>
