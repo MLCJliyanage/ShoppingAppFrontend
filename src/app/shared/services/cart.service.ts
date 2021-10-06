@@ -66,7 +66,6 @@ export class CartService {
     const productIndex = this.cartItems.findIndex(item => item.product.id === productId);
 
     if(productIndex >= 0){
-      console.log('removing')
       let cartItem = this.cartItems.find(x => x.productId === productId) as CartItem
       let reduceAmount = cartItem?.quentity * cartItem?.product?.price;
       this.cartTotal -= reduceAmount;

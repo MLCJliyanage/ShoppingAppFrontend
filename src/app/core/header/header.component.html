@@ -3,7 +3,7 @@
 
     <div class="search-wrap">
       <div class="container">
-        <a href="#" class="search-close js-search-close"><span class="icon-close2"></span></a>
+        <a (click)="searchClose()" class="search-close js-search-close"><span class="icon-close2"></span></a>
         <form [formGroup]="form">
           <input type="text" class="form-control" formControlName="search" placeholder="Search Product...">
         </form>  

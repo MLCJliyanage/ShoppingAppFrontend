@@ -1,14 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { debounceTime, map, switchMap } from 'rxjs/operators';
+import { debounceTime, switchMap } from 'rxjs/operators';
 import { AccountManagementService } from 'src/app/account/services/account-management.service';
 import { Product } from 'src/app/models/product';
 import { User } from 'src/app/models/user';
-import { CartService } from 'src/app/shared/services/cart.service';
-import { ProductDetailComponent } from '../product-detail/product-detail.component';
 import { ProductManagementService } from '../services/product-management.service';
-import { ToastrService } from 'ngx-toastr'
 import { Subscription } from 'rxjs';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-product-listing',
@@ -27,7 +24,6 @@ export class ProductListingComponent implements OnInit {
 
   constructor(
     private productMgtService: ProductManagementService,
-    private cartService: CartService,
     private accountService: AccountManagementService
   ) {
 
@@ -37,7 +33,6 @@ export class ProductListingComponent implements OnInit {
   ngOnInit(): void {
 
     this.loadProducts();
-
     this.getProductByCategory();
 
   }
@@ -53,11 +48,11 @@ export class ProductListingComponent implements OnInit {
 
     this.productMgtService.getSearchSubject().subscribe(
       (search) => {
-        console.log(search)
         if (this.manageInput !== 'AdminView'){
           if (search.length > 1) { 
             this.getSearchResults(search); 
           }else { 
+            console.log('inside')
             this.getAllProducts();
           }
         } else {
@@ -99,7 +94,7 @@ export class ProductListingComponent implements OnInit {
   searchProduct(): void {
     this.form.get('search')?.valueChanges.pipe(
       debounceTime(400),
-      switchMap(async (value) => value.length >= 3 ? this.getSearchResults(value) : this.getAllProducts())
+      switchMap(async (value) => value.length >= 3 ? this.getSearchResults(value) : [])
     ).subscribe((res) => {
     })
   }

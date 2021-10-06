@@ -19,8 +19,6 @@ export class RoleGuard implements CanActivate {
   canActivate(): boolean {
     let user: User = JSON.parse(this.accountService.getUser()) as User
     if (user) {
-      console.log(user.role)
-      console.log(this.route.snapshot.data)
       if (user.role == Roles.Admin) {
         return true;
       } else {

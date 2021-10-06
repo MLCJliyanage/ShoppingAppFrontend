@@ -65,7 +65,6 @@ export class CartComponent implements OnInit {
   }
 
   goToCheckout(): void {
-    console.log(this.cartItems);
     let order: Order = {cartItems: this.cartItems, total: this.totalAmmount}
     localStorage.setItem('order', JSON.stringify(order))
     this.cartService.setOrder(order);

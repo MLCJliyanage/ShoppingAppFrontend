@@ -25,13 +25,6 @@ export class CheckoutComponent implements OnInit {
 
     this.orderDetails = JSON.parse(localStorage.getItem('order') as string) as Order;
 
-    // this.cartService.getOrder().subscribe(
-    //   (data: Order) => {
-    //     this.orderDetails = data;
-    //     this.orderItems = data.cartItems
-    //     this.pid = data.total
-    //     console.log(this.pid)
-    //   });
   }
 
   getImagePath(imageName: string): string {

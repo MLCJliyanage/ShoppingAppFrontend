@@ -1,3 +1,4 @@
+import { ValueConverter } from '@angular/compiler/src/render3/view/template';
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -64,7 +65,6 @@ export class HeaderComponent implements OnInit {
 
     this.accountService.getCurrentUser()
     .subscribe((user) => {
-      console.log(user)
       this.currentUser = user
       if(user){
         this.isLoggedIn = true;
@@ -106,14 +106,15 @@ export class HeaderComponent implements OnInit {
   searchProduct(): void{
     this.form.get('search')?.valueChanges.pipe(
       debounceTime(400),
-      switchMap(async (value) => value.length >= 3 ? this.productMgtService.setSearchSubject(value) : 
-      this.productMgtService.setSearchSubject('a'))
+      switchMap(async (value) => value.length >= 3 ? this.productMgtService.setSearchSubject(value) : value.length == 0 ?
+      this.productMgtService.setSearchSubject('a') : []     
+      )
     ).subscribe((res) => {
     })
   }
 
   goToMainProductView(): void {
-    this.productMgtService.setSearchSubject('a');
+    // this.productMgtService.setSearchSubject('a');
     this.router.navigate(['/products'])
   }
 
@@ -121,8 +122,6 @@ export class HeaderComponent implements OnInit {
     if (localStorage.getItem('user')) {
       let user: User = JSON.parse(localStorage.getItem('user') as string) as User
       if(user){
-        console.log(user)
-        console.log(user.role)
         this.isLoggedIn = true;
         this.userName = user.username
         if(user.role === Roles.Admin){
@@ -135,6 +134,10 @@ export class HeaderComponent implements OnInit {
 
   getDecodedToken(token: any) {
     return JSON.parse(atob(token.split('.')[1]));
+  }
+
+  searchClose(): void{
+    this.productMgtService.setSearchSubject('a');
   }
   
 }
