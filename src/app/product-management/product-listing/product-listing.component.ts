@@ -38,7 +38,7 @@ export class ProductListingComponent implements OnInit {
 
     this.loadProducts();
 
-    //this.cartService.products.subscribe(data => {});
+    this.getProductByCategory();
 
   }
 
@@ -65,6 +65,17 @@ export class ProductListingComponent implements OnInit {
         }
       });
 
+  }
+
+  private getProductByCategory(){
+    if(this.manageInput !== 'AdminView'){
+      this.productMgtService.getCategoryMsg().subscribe((id: number)=>{
+        this.productMgtService.getProductsByCategory(id).subscribe((data) =>{
+          this.productList = data;
+        },(error)=>{}
+        )
+      })
+    }
   }
 
 

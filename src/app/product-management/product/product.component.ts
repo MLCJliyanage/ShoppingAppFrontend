@@ -18,15 +18,18 @@ import { ToastrService } from 'ngx-toastr';
 export class ProductComponent implements OnInit {
 
   @Input() product!: Product;
-  productDelete: string = 'default';
+  
 
   @Output() deleteEvent = new EventEmitter<string>();
+
+  imagePath = environment.imageBasePath;
+  defaultImagePath = environment.defaultImagePath;
+  productDelete: string = 'default';
 
   isAdded = false;
   productList: any[] = [];
   manageViewMessage!: string;
   isManageView: boolean = false;
-  imagePath = environment.imageBasePath;
 
   cartQuentity: number = 1;
   cartItem!: CartItem;
@@ -41,6 +44,7 @@ export class ProductComponent implements OnInit {
 
   ngOnInit(): void {
 
+    // set cart if exsists
     if (localStorage.getItem('order') !== null) {
       let currentCart = JSON.parse(localStorage.getItem('order') as string) as Order;
       this.cartList = currentCart.cartItems;
@@ -53,7 +57,7 @@ export class ProductComponent implements OnInit {
       }
     }
 
-
+    // get cart items changes
     this.cartService.products.subscribe(
       (data) =>{
         this.cartList = data
@@ -69,6 +73,7 @@ export class ProductComponent implements OnInit {
       }
     );
 
+    // check current view
     this.productMgtService.getManageView().subscribe(message => {this.manageViewMessage = message
         if (message === 'AdminView'){
             this.isManageView = true;
@@ -81,7 +86,7 @@ export class ProductComponent implements OnInit {
 
   getImagePath(imageName: string): string {
     if(imageName === null){
-      return '/assets/product_images/bat.png'
+      return this.defaultImagePath;
     } else{
     return this.imagePath+ imageName;
     }

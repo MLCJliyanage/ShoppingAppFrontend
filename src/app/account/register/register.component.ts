@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AccountManagementService } from '../services/account-management.service';
 import { first } from 'rxjs/operators';
+import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -18,7 +20,8 @@ export class RegisterComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private accountService: AccountManagementService,
-    //private alertService: AlertService
+    private toastr: ToastrService,
+    private router : Router
   ) { }
 
   get f() { return this.form.controls; }
@@ -39,12 +42,11 @@ export class RegisterComponent implements OnInit {
         .pipe(first())
         .subscribe(
           data => {
-            //this.alertService.success('Registration successful', { keepAfterRouteChange: true });
-            //this.router.navigate(['../login'], { relativeTo: this.route });
+            this.toastr.success('Registered!');
+            this.router.navigate(['/login'])
           },
           error => {
-            //this.alertService.error(error);
-            this.loading = false;
+            this.toastr.error('Registration Faild!');
           });
 
     }

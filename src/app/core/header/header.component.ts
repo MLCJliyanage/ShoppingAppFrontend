@@ -67,16 +67,14 @@ export class HeaderComponent implements OnInit {
       console.log(user)
       this.currentUser = user
       if(user){
-        console.log(user)
         this.isLoggedIn = true;
         this.userName = user.username
-        if(user.role === Roles.Admin){
+        if(this.getDecodedToken(user.token).role === Roles.Admin){
           this.isNormalUser = false;
         }
       } else{
-        console.log('no user')
-        // this.isLoggedIn = false;
-        // this.isNormalUser = true;
+        this.isLoggedIn = false;
+        this.isNormalUser = true;
       }   
     });
   }
@@ -102,7 +100,7 @@ export class HeaderComponent implements OnInit {
   }
 
   getProductByCategory(id: number){
-      this.productMgtService.setSearchSubject(id.toString())
+      this.productMgtService.setCategoryMsg(id)
   }
 
   searchProduct(): void{
@@ -124,6 +122,7 @@ export class HeaderComponent implements OnInit {
       let user: User = JSON.parse(localStorage.getItem('user') as string) as User
       if(user){
         console.log(user)
+        console.log(user.role)
         this.isLoggedIn = true;
         this.userName = user.username
         if(user.role === Roles.Admin){
@@ -133,4 +132,9 @@ export class HeaderComponent implements OnInit {
   }
 
   }
+
+  getDecodedToken(token: any) {
+    return JSON.parse(atob(token.split('.')[1]));
+  }
+  
 }

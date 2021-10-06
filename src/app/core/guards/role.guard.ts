@@ -13,18 +13,24 @@ export class RoleGuard implements CanActivate {
   constructor(
     private accountService: AccountManagementService,
     private toastr: ToastrService,
-    private router: Router
+    private route: ActivatedRoute
   ) { }
 
   canActivate(): boolean {
-    let user: User = JSON.parse(this.accountService.getUser().toString()) as User
-    if (user.role === Roles.Admin.toString()) {
-      return true;
-    } else {
-      this.toastr.warning('Unauthorized!');
-      return false;
-    }
-     
+    let user: User = JSON.parse(this.accountService.getUser()) as User
+    if (user) {
+      console.log(user.role)
+      console.log(this.route.snapshot.data)
+      if (user.role == Roles.Admin) {
+        return true;
+      } else {
+        this.toastr.warning('Unauthorized!');
+        return false;
+        }    
+      } else{
+        this.toastr.warning('Unauthorized!');
+        return false;
+      }
   }
 
 

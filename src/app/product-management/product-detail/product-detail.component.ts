@@ -11,10 +11,13 @@ import { environment } from 'src/environments/environment';
 })
 export class ProductDetailComponent implements OnInit,OnDestroy {
 
+  imagePath = environment.imageBasePath;
+  defaultImagePath = environment.defaultImagePath;
+  
   productId!: number; 
   product: any;
   $routeParams!: Subscription;
-  imagePath = environment.imageBasePath;
+  
   constructor(
     private route: ActivatedRoute, 
     private router: Router,
@@ -46,7 +49,7 @@ export class ProductDetailComponent implements OnInit,OnDestroy {
 
   getImagePath(imageName: string): string {
     if(imageName === null){
-      return '/assets/product_images/bat.png'
+      return this.defaultImagePath;
     } else{
     return this.imagePath+ imageName;
     }

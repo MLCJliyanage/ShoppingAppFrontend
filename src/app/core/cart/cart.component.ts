@@ -18,6 +18,7 @@ export class CartComponent implements OnInit {
    cartItems: CartItem[] = [];
    totalAmmount: any;
    imagePath = environment.imageBasePath;
+   defaultImagePath = environment.defaultImagePath;
 
   constructor(
     private productMgtService: ProductManagementService,
@@ -57,7 +58,7 @@ export class CartComponent implements OnInit {
 
   getImagePath(imageName: string): string {
     if(imageName === null){
-      return '/assets/product_images/bat.png'
+      return this.defaultImagePath;
     } else{
     return this.imagePath+ imageName;
     }

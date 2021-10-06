@@ -5,8 +5,9 @@
 export const environment = {
   production: false,
   apiUrl: 'https://localhost:44366/api/',
-  imageBasePath: 'https://shoppingapp.blob.core.windows.net/shopimages/'
-,};
+  imageBasePath: 'https://shoppingapp.blob.core.windows.net/shopimages/',
+  defaultImagePath: '/assets/product_images/bat.png'
+};
 
 /*
  * For easier debugging in development mode, you can import the following file

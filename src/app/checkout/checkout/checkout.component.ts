@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import {  Component, OnInit } from '@angular/core';
 import { CartItem } from 'src/app/models/cartitem';
 import { Order } from 'src/app/models/order';
 import { CartService } from 'src/app/shared/services/cart.service';
@@ -12,10 +12,10 @@ import { environment } from 'src/environments/environment';
 export class CheckoutComponent implements OnInit {
 
   imagePath = environment.imageBasePath;
+  defaultImagePath = environment.defaultImagePath;
   
   orderDetails!: Order;
   orderItems!: CartItem[];
-  pid!: number;
 
   constructor(
     private cartService: CartService
@@ -24,8 +24,6 @@ export class CheckoutComponent implements OnInit {
   ngOnInit(): void {
 
     this.orderDetails = JSON.parse(localStorage.getItem('order') as string) as Order;
-    this.pid = this.orderDetails.total
-    console.log(this.orderDetails.cartItems[0].product.id)
 
     // this.cartService.getOrder().subscribe(
     //   (data: Order) => {
@@ -38,7 +36,7 @@ export class CheckoutComponent implements OnInit {
 
   getImagePath(imageName: string): string {
     if(imageName === null){
-      return '/assets/product_images/bat.png'
+      return this.defaultImagePath;
     } else{
     return this.imagePath+ imageName;
     }

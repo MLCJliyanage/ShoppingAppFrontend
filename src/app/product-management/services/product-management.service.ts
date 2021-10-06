@@ -7,6 +7,7 @@ import { Product } from 'src/app/models/product';
 import { ResponseDto } from 'src/app/models/response';
 import { environment } from 'src/environments/environment';
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -16,10 +17,19 @@ export class ProductManagementService {
 
   private searchSubject = new BehaviorSubject<string>('a');
   private manageView = new BehaviorSubject<string>('DefaultView')
+  private categoryMsg = new Subject<number>();
 
   constructor(
     private dataAccessService: DataAccessService
   ) { }
+
+  setCategoryMsg(id: number) {
+    this.categoryMsg.next(id)
+  }
+
+  getCategoryMsg(): Observable<number>{
+    return this.categoryMsg.asObservable();
+  }
 
   setManageView(view: string){
     this.manageView.next(view);
@@ -85,5 +95,11 @@ export class ProductManagementService {
     let params = new HttpParams();
     params = params.append('search', search);
     return this.dataAccessService.get(this.baseUrl+ 'Product/searchproduct',params)
+  }
+
+  getProductsByCategory(id: number){
+    return this.dataAccessService.get(this.baseUrl+ 'Product/getproductsbycategory/'+ id).pipe(
+      map((res: Product[]) => {return res})
+    )
   }
 }

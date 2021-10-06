@@ -10,7 +10,6 @@ import { AddProductComponent } from './add-product/add-product.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ManageProductComponent } from './manage-product/manage-product.component';
 
-
 @NgModule({
   declarations: [
     ProductListingComponent,

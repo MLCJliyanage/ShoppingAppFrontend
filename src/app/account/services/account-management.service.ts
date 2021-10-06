@@ -39,7 +39,6 @@ export class AccountManagementService {
 
  //setting the username,token and userrole in localstorage
  setCurrentUser(user: User) {
-   console.log(user)
    this.currentUserSource.next(user);
   user.role = this.getDecodedToken(user.token).role;
   user.user = this.getDecodedToken(user.token).username;
