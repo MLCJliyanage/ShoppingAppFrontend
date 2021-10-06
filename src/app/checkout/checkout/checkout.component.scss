@@ -1,0 +1,14 @@
+.product-cart {  
+  right: 1em;
+  top: 73px;
+  width: 500px;
+  background-color: #FFF;
+}
+
+.product-cart li {
+  display: flex;
+  flex-flow: row;
+  padding: 1em;
+  border-bottom: 1px solid #CCC;
+  font-size: 14px;
+}

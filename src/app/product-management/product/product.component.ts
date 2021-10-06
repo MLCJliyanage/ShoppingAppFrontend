@@ -1,8 +1,14 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit,Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { CartService } from 'src/app/shared/services/cart.service';
 import { ProductManagementService } from '../services/product-management.service';
+import { environment } from 'src/environments/environment';
+import { Product } from 'src/app/models/product';
+import { CartItem } from 'src/app/models/cartitem';
+import { Order } from 'src/app/models/order';
+import { ResponseDto } from 'src/app/models/response';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-product',
@@ -11,40 +17,74 @@ import { ProductManagementService } from '../services/product-management.service
 })
 export class ProductComponent implements OnInit {
 
-  @Input() product: any;
+  @Input() product!: Product;
+  productDelete: string = 'default';
+
+  @Output() deleteEvent = new EventEmitter<string>();
+
   isAdded = false;
   productList: any[] = [];
   manageViewMessage!: string;
   isManageView: boolean = false;
+  imagePath = environment.imageBasePath;
 
+  cartQuentity: number = 1;
+  cartItem!: CartItem;
+  cartList: CartItem[] = [];
 
   constructor(
     private router: Router,
     private cartService: CartService,
-    private productMgtService: ProductManagementService
+    private productMgtService: ProductManagementService,
+    private toastr: ToastrService
   ) { }
 
   ngOnInit(): void {
-    this.cartService.products.subscribe(
-      (data: any) =>{
-        this.productList = data
-        if (!this.productList.includes(this.product)){
-          console.log('hhe')
-          this.isAdded = false;
-        }
 
+    if (localStorage.getItem('order') !== null) {
+      let currentCart = JSON.parse(localStorage.getItem('order') as string) as Order;
+      this.cartList = currentCart.cartItems;
+      if(this.cartList.length === 0) {
+        this.isAdded = false
+        this.cartQuentity = 1;
+      } else if (this.cartList.find(x => x.productId == this.product.id)) {
+        this.isAdded = true
+        this.cartQuentity += this.cartList.find(x => x.productId == this.product.id)?.quentity as number
+      }
+    }
+
+
+    this.cartService.products.subscribe(
+      (data) =>{
+        this.cartList = data
+        if(this.cartList.length === 0) {
+          this.isAdded = false
+          this.cartQuentity = 1;
+        } else if (data.find(x => x.productId == this.product.id)) {
+          this.isAdded = true
+        } else {
+          this.isAdded = false;
+          this.cartQuentity = 1;
+        }
       }
     );
 
-    this.productMgtService.productManageMessage.subscribe(message => {this.manageViewMessage = message
-        if (message === 'ManageView')
-         this.isManageView = true;
+    this.productMgtService.getManageView().subscribe(message => {this.manageViewMessage = message
+        if (message === 'AdminView'){
+            this.isManageView = true;
+          } else {
+            this.isManageView = false;
+          }
     })
     
   }
 
   getImagePath(imageName: string): string {
-    return 'assets/product_images/'+imageName;
+    if(imageName === null){
+      return '/assets/product_images/bat.png'
+    } else{
+    return this.imagePath+ imageName;
+    }
   }
 
   getProductDetails(): void{
@@ -53,21 +93,18 @@ export class ProductComponent implements OnInit {
 
   addToCart(event: any, productId: number): any {
     
-    // If Item is already added then display alert message
-    if (event.target.classList.contains('btn-success')) {
-      alert('This product is already added into cart.');
-      return false;
-    }
+    let item: CartItem = {product: this.product, quentity: this.cartQuentity, productId: this.product.id}
+    this.cartQuentity += 1;
     this.isAdded = true;
-    this.cartService.addProductToCart(this.product);
+    this.cartService.addProductToCart(item);
 
   }
 
   removeFromCart(event: any, productId: number): any {
-    
     // If Item is already added then display alert message
     if (this.isAdded) {
       this.isAdded = false;
+      this.cartQuentity = 1;
       this.cartService.removeProductFromCart(this.product.id);
     }
     
@@ -78,6 +115,21 @@ export class ProductComponent implements OnInit {
     this.router.navigate(['/products/edit-product/'+this.product.id])
   }
 
+  deleteProduct(id: number) {
+    this.productMgtService.deleteProduct(id).subscribe((data: ResponseDto)=> {
+        if(data.isSuccess){
+          this.toastr.success('Product Deleted')
+        } else {
+          this.toastr.error('Product Delete Failed')
+        }
+        this.sendDeleteMessage();
+    }, (error)=>{
+      this.toastr.error('Product Delete Failed')
+    })
+  }
 
+  sendDeleteMessage():void {
+    this.deleteEvent.emit('itemDelete');
+  }
 
 }

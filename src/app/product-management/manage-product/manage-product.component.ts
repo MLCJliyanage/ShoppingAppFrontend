@@ -11,7 +11,7 @@ import { ProductManagementService } from '../services/product-management.service
 })
 export class ManageProductComponent implements OnInit {
 
-  toPtoductList: string = 'productManage'
+  toPtoductList: string = 'AdminView'
   manageViewMessage!: string;
 
   constructor(
@@ -20,15 +20,15 @@ export class ManageProductComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.sendManageViewMessage()
+    this.setViewForAdmin();
   }
 
-  sendManageViewMessage(): void {
-    this.productMgtService.changeToManageView("ManageView");
-  }
 
   addProduct(): void{
     this.router.navigate(['/products/add-product'])
   }
 
+  setViewForAdmin(): void {
+      this.productMgtService.setManageView('AdminView');
+  }
 }

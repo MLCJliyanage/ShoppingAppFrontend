@@ -1,6 +1,6 @@
 import { HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ReplaySubject } from 'rxjs';
+import { Observable, ReplaySubject, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DataAccessService } from 'src/app/core/services/data-access.service';
 import { environment } from 'src/environments/environment';
@@ -12,22 +12,15 @@ import { User } from '../../models/user';
 export class AccountManagementService {
 
   baseUrl = environment.apiUrl;
-  currentUserSource = new ReplaySubject<User>(1);
-  currentUser$ = this.currentUserSource.asObservable();
+  currentUserSource = new Subject<User>();
 
   constructor(
     private dataAccessService: DataAccessService
   ) { }
 
-  headers = new HttpHeaders({
-    // 'Content-Type':'application/x-www-form-urlencoded'
-    'Content-Type':  'application/json'
-  });
 
   register(user: any) {
-    console.log(user.toString())
     let user1 = {data: user.toString()}
-    // let hello = JSON.stringify(user1);
     return this.dataAccessService.post(this.baseUrl+'Auth/register',user);
 }
 
@@ -43,13 +36,20 @@ export class AccountManagementService {
   );
 }
 
+
  //setting the username,token and userrole in localstorage
  setCurrentUser(user: User) {
+   console.log(user)
+   this.currentUserSource.next(user);
   user.role = this.getDecodedToken(user.token).role;
-
+  user.user = this.getDecodedToken(user.token).username;
   localStorage.setItem('user', JSON.stringify(user));
-  this.currentUserSource.next(user);
+  
 }
+
+  getCurrentUser(): Observable<User>{
+    return this.currentUserSource.asObservable();
+  }
 
 logout() {
   localStorage.removeItem('user');
@@ -65,8 +65,12 @@ isLoggedin(): boolean {
   return !!localStorage.getItem('user')
 }
 
-getUser(): User {
-  return localStorage.getItem('user') as unknown as User
+getUser(): any {
+  if (localStorage.getItem('user') !== null) {
+    return localStorage.getItem('user') as unknown as User
+  } else {
+    return null
+  }
 }
 
 }

@@ -24,6 +24,6 @@ import { ManageProductComponent } from './manage-product/manage-product.componen
     ProductManagementRoutingModule,
     ReactiveFormsModule
   ],
-  providers:[ProductManagementService]
+  providers:[]
 })
 export class ProductManagementModule { }

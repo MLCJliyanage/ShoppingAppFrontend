@@ -7,16 +7,19 @@
 
 <div class="product-body">
     <div class="header-line">
-        <div class ="product-title">{{product?.name}}</div>
+        <div class ="product-title text-center">{{product?.manufacturerName}} {{product?.name}}</div>
     </div>
 
 
 <div class="details">
     Rs: {{product?.price}}
 </div>
-
 <div class="details">
-    In Stock: {{product?.inStock}}
+    Color: {{product?.color}}
+</div>
+<div class="details form-check">
+    <p *ngIf="product?.inStock" style="color:greenyellow;">In Stock</p>  
+    <p *ngIf="!product?.inStock" style="color: red;">Out Of Stock</p> 
 </div>
 </div>
 </div>

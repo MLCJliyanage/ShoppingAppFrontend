@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ProductManagementService } from '../services/product-management.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-product-detail',
@@ -11,8 +12,9 @@ import { ProductManagementService } from '../services/product-management.service
 export class ProductDetailComponent implements OnInit,OnDestroy {
 
   productId!: number; 
-  product: any
-  $routeParams!: Subscription
+  product: any;
+  $routeParams!: Subscription;
+  imagePath = environment.imageBasePath;
   constructor(
     private route: ActivatedRoute, 
     private router: Router,
@@ -39,12 +41,15 @@ export class ProductDetailComponent implements OnInit,OnDestroy {
   getProduct(id: number){
     this.productMgtService.getProductById(id).subscribe(data => {
       this.product = data;
-      console.log(this.product)
     })
   }
 
   getImagePath(imageName: string): string {
-    return 'assets/product_images/'+imageName;
+    if(imageName === null){
+      return '/assets/product_images/bat.png'
+    } else{
+    return this.imagePath+ imageName;
+    }
   }
 
 

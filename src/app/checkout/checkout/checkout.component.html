@@ -1,0 +1,17 @@
+<div class="product-cart">
+    <ul>
+      <li *ngFor="let order of orderDetails.cartItems">
+        <div>
+        <img class="" width="50" height="50" [src]="getImagePath(order.product.image)" alt="Card image cap">
+        <span class="col-md-3">{{order.product.name}}</span> 
+        <span class="col-md-3">{{order.product.price  | currency:'LKR'}}</span>
+        <span class="col-md-3">{{order.quentity}}</span>
+        </div>       
+      </li>
+    </ul>
+    <div class="col-md-6">
+        <strong class="d-block">Total:</strong>
+        <span class="d-block">{{orderDetails.total | currency:'LKR'}}</span>
+    </div>
+        
+  </div>

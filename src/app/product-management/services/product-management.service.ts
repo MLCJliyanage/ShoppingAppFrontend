@@ -1,6 +1,10 @@
+import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { DataAccessService } from 'src/app/core/services/data-access.service';
+import { Product } from 'src/app/models/product';
+import { ResponseDto } from 'src/app/models/response';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -9,22 +13,35 @@ import { environment } from 'src/environments/environment';
 export class ProductManagementService {
 
   baseUrl = environment.apiUrl;
-  productManageMessage = new BehaviorSubject<string>('default view');
-  currentMessage = this.productManageMessage.asObservable();
+
+  private searchSubject = new BehaviorSubject<string>('a');
+  private manageView = new BehaviorSubject<string>('DefaultView')
 
   constructor(
     private dataAccessService: DataAccessService
   ) { }
 
-  changeToManageView(message: string) {
-    this.productManageMessage.next(message);
+  setManageView(view: string){
+    this.manageView.next(view);
   }
 
-  getAllProducts(){
+  getManageView(): Observable<string> {
+    return this.manageView.asObservable();
+  }
+  
+  setSearchSubject(search: string){
+    this.searchSubject.next(search);
+  }
+
+  getSearchSubject(): Observable<string> {
+    return this.searchSubject.asObservable();
+  }
+
+  getAllProducts(): Observable<Product[]>{
     return this.dataAccessService.get(this.baseUrl + 'Product/getallproducts');
   }
 
-  getProductById(id: number){
+  getProductById(id: number): Observable<Product>{
     return this.dataAccessService.get(this.baseUrl+ 'Product/getproduct/'+id);
   }
 
@@ -32,15 +49,41 @@ export class ProductManagementService {
     return this.dataAccessService.get(this.baseUrl+ 'Product/getallcategories');
   }
 
-  getProductByAdmin(id: number){
+  getAllManufacturers(){
+    return this.dataAccessService.get(this.baseUrl+ 'Product/getallmanufactureres');
+  }
+
+  getProductByAdmin(id: number): Observable<Product[]>{
     return this.dataAccessService.get(this.baseUrl+ 'Product/getproductbyadmin/'+id);
   }
 
   addProduct(product: any) {
-    return this.dataAccessService.post(this.baseUrl+ 'Product/addproduct', product)
+    return this.dataAccessService.post(this.baseUrl+ 'Product/addproduct', product).pipe(
+      map((res: any) => {
+        return res;
+      })
+    )
   }
 
   updateProduct(product: any) {
     return this.dataAccessService.post(this.baseUrl+ 'Product/updateproduct', product)
+  }
+
+  deleteProduct(id: number) {
+    return this.dataAccessService.delete(this.baseUrl+ 'Product/deleteproduct/'+ id).pipe(
+      map((res: ResponseDto) => {return res} )
+    )
+  }
+
+  uploadImage(image: File) {
+    const formData = new FormData();
+    formData.append('imageFile',image);
+    return this.dataAccessService.post(this.baseUrl+ 'Product/uploadimage',formData);
+  }
+
+  getSearchedProducts(search: string){
+    let params = new HttpParams();
+    params = params.append('search', search);
+    return this.dataAccessService.get(this.baseUrl+ 'Product/searchproduct',params)
   }
 }

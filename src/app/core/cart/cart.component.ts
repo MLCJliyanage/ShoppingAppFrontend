@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { CartItem } from 'src/app/models/cartitem';
+import { Order } from 'src/app/models/order';
+import { ProductManagementService } from 'src/app/product-management/services/product-management.service';
 import { CartService } from 'src/app/shared/services/cart.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-cart',
@@ -8,18 +13,33 @@ import { CartService } from 'src/app/shared/services/cart.service';
 })
 export class CartComponent implements OnInit {
 
-   cartItems: any;
+  
+  cartItem!: CartItem;
+   cartItems: CartItem[] = [];
    totalAmmount: any;
+   imagePath = environment.imageBasePath;
 
   constructor(
-    private cartService: CartService 
+    private productMgtService: ProductManagementService,
+    private cartService: CartService,
+    private router : Router 
   ) { }
 
   ngOnInit() {
 
+    if (localStorage.getItem('order') !== null) {
+      let currentCart = JSON.parse(localStorage.getItem('order') as string) as Order;
+      this.cartItems = currentCart.cartItems;
+      this.totalAmmount = currentCart.total;
+    }
+
+    this.productMgtService.getSearchSubject().subscribe(
+      (search) => {
+      }
+    )
+
     this.cartService.getProducts().subscribe(data => {
       this.cartItems = data;
-
       this.totalAmmount = this.cartService.getTotalPrice();
     });
 
@@ -27,28 +47,29 @@ export class CartComponent implements OnInit {
 
   // Remove item from cart list
   removeItemFromCart(productId: any) {
-    /* this.cartItems.map((item, index) => {
-      if (item.id === productId) {
-        this.cartItems.splice(index, 1);
-      }
-    });
-
-    this.mySharedService.setProducts(this.cartItems); */
-
     this.cartService.removeProductFromCart(productId);
-
   }
 
   emptyCart() {
     this.cartService.emptryCart();
+    localStorage.removeItem('order')
   }
 
   getImagePath(imageName: string): string {
-    console.log(imageName)
-    return 'assets/product_images/'+imageName;
+    if(imageName === null){
+      return '/assets/product_images/bat.png'
+    } else{
+    return this.imagePath+ imageName;
+    }
   }
 
   goToCheckout(): void {
+    console.log(this.cartItems);
+    let order: Order = {cartItems: this.cartItems, total: this.totalAmmount}
+    localStorage.setItem('order', JSON.stringify(order))
+    this.cartService.setOrder(order);
+    
+    setTimeout(() => {  this.router.navigate(['/checkout']) }, 300);
     
   }
 

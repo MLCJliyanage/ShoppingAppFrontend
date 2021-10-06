@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { first } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { AccountManagementService } from '../services/account-management.service';
 
 @Component({
@@ -16,7 +17,9 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private accountService: AccountManagementService
+    private accountService: AccountManagementService,
+    private toastr: ToastrService,
+    private router : Router
   ) { }
 
   ngOnInit(): void {
@@ -29,22 +32,26 @@ export class LoginComponent implements OnInit {
   get f() { return this.form.controls; }
 
   onSubmit() {
-    console.log('innnnnnnnnn')
     this.submitted = true;
-    console.log(this.form.value)
+    if (this.form.valid){
+      this.accountService.login(this.form.value)
+          .subscribe(
+              data => {
+                  this.toastr.success('Login Success!');
+                  if (localStorage.getItem('order') !== null)
+                  {
+                    this.router.navigate(['/checkout']) 
+                  } else {
+                    setTimeout(() => {this.router.navigate(['/home'])}, 500);
+                  }
+              },
+              error => {
+                  this.toastr.error('Login Faild!');
+              });
 
-    // this.loading = true;
-    this.accountService.login(this.form.value)
-        .subscribe(
-            data => {
-                console.log(data);
-                //this.alertService.success('Registration successful', { keepAfterRouteChange: true });
-                //this.router.navigate(['../login'], { relativeTo: this.route });
-            },
-            error => {
-                //this.alertService.error(error);
-                this.loading = false;
-            });
+      } else {
+        
+      }
   }
 
 }

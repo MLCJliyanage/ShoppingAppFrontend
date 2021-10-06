@@ -19,8 +19,12 @@ export class AuthGuard implements CanActivate {
   ) { }
 
   canActivate(): boolean {
-    console.log('inside')
     if (this.accountService.isLoggedin()) {
+      if (localStorage.getItem('order') === null){
+          this.toastr.warning('Please Add Items to Cart!');
+        this.router.navigate(['/products'])
+        return false;
+      }
       return true;
     } else {
       this.toastr.error('Please Login!');

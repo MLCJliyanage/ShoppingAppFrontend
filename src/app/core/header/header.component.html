@@ -4,8 +4,8 @@
     <div class="search-wrap">
       <div class="container">
         <a href="#" class="search-close js-search-close"><span class="icon-close2"></span></a>
-        <form action="#" method="post">
-          <input type="text" class="form-control" placeholder="Search keyword and hit enter...">
+        <form [formGroup]="form">
+          <input type="text" class="form-control" formControlName="search" placeholder="Search Product...">
         </form>  
       </div>
     </div>
@@ -14,7 +14,7 @@
       <div class="d-flex align-items-center justify-content-between">
         <div class="logo">
           <div class="site-logo">
-            <a href="index.html" class="js-logo-clone">ShopMax</a>
+            <a class="js-logo-clone">Shoping App</a>
           </div>
         </div>
         <div class="main-nav d-none d-lg-block">
@@ -24,25 +24,16 @@
                 <a [routerLink]="['/home']">Home</a>
               </li>
               
-              <li><a>Categories</a></li>
+              <li><a *ngIf="isNormalUser" (click)="goToMainProductView()">Products</a></li>
               <li class="has-children active">
-                <a>Products</a>
+                <a>Categories</a>
                 <ul class="dropdown">
-                  <!-- <li *ngFor="let category of categoryDetails">
-                    <a [routerLink]="['/category/productsbycategory', category.Category_id ]">{{category.Category_name}}</a>
-                  </li> -->
-                  <!-- <li class="has-children">
-                    <a href="#">Sub Menu</a>
-                    <ul class="dropdown">
-                      <li><a href="#">Menu One</a></li>
-                      <li><a href="#">Menu Two</a></li>
-                      <li><a href="#">Menu Three</a></li>
-                    </ul>
-                  </li> -->
+                      <li *ngFor="let category of categoryList" (click)=getProductByCategory(category.id)><a>{{category.name}}</a></li> 
                 </ul>
               </li>
-              <li><a href="index.html">Contact</a></li>
-              <li *ngIf="!isNormalUser"><a [routerLink]="['/products/manage-product']">Manage Products</a></li>
+              <li><a>Contact</a></li>
+              <li *ngIf="!isNormalUser && isLoggedIn"><a [routerLink]="['/products/manage-product']">Manage Products</a></li>
+              <li *ngIf="isLoggedIn"><a>Hi! {{userName | lowercase}}</a></li>
             </ul>
           </nav>
         </div>
@@ -50,7 +41,7 @@
           <a href="#" class="icons-btn d-inline-block js-search-open"><span class="icon-search"></span></a>
           <a *ngIf="!isLoggedIn" [routerLink]="['/account/login']" class="icons-btn d-inline-block"><span class="icon-user-o"></span></a>
           <a *ngIf="isLoggedIn" class="icons-btn d-inline-block" (click)="logOut()"><span class="icon-exit_to_app"></span></a>
-          <a href="cart.html" class="icons-btn d-inline-block bag">
+          <a class="icons-btn d-inline-block bag">
             <span class="icon-shopping-bag"></span>
             <span class="number">{{cartProductCount}}</span>
           </a>

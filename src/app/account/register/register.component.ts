@@ -31,17 +31,14 @@ export class RegisterComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log('innnnnnnnnn')
     if (this.form.valid) {
       this.submitted = true;
-      console.log(this.form.value)
 
       // this.loading = true;
       this.accountService.register(this.form.value)
         .pipe(first())
         .subscribe(
           data => {
-            console.log(data);
             //this.alertService.success('Registration successful', { keepAfterRouteChange: true });
             //this.router.navigate(['../login'], { relativeTo: this.route });
           },

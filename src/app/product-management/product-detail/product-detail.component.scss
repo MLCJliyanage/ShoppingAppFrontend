@@ -22,6 +22,13 @@
     padding: 5px;
 }
 
+.header-line .text-center {
+    text-align: center!important;
+    font-size: xx-large;
+    font-style: initial;
+    color: violet;
+}
+
 .product-ribbon {
     justify-self: end;
     align-self: center;
@@ -37,23 +44,24 @@
 }
 
 .header-line{
-    border: 10px #ccc solid;
+    border: 2px rgb(16, 40, 170) solid;
     display: grid;
     grid-template-columns: 8fr 2fr;
     align-items: center;
 }
 
 .product-body {
-    border: 10px #ccc solid;
+    border: 2px rgb(14, 46, 190) solid;
     margin: 5px 10px;
     display: grid;
     padding: 10px;
-    grid-template-rows: 1fr 0.5fr 5fr 1fr;
+    grid-template-rows: 1fr 0.5fr 0.5fr 1fr;
 }
 
-.details{
-    justify-self: start;
+.details {
+    justify-self: flex-start;
     align-self: center;
     padding: 5px;
     margin: 5px;
+    font-size: x-large;
 }

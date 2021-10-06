@@ -15,11 +15,12 @@ import { ToastrService } from 'ngx-toastr';
 export class AddProductComponent implements OnInit {
 
   form!: FormGroup;
-  form2!: FormGroup;
   loading = false;
   submitted = false;
   categoryList: any[] = [];
+  manufacturerList: any[] = [];
   currentUser!: User;
+  imageFile!: File;
 
   $routeParams!: Subscription
   productId!: number;
@@ -34,38 +35,40 @@ export class AddProductComponent implements OnInit {
     private productMgtService: ProductManagementService,
     private route: ActivatedRoute,
     private accountService: AccountManagementService,
-    private toastr: ToastrService,
+    private toastr: ToastrService
   ) { }
 
   ngOnInit(): void {
 
     this.getCategories();
+    this.getManufacturers();
 
     this.getProductDetails();
 
     this.currentUser = this.getCurrentUser();
 
       this.form = this.formBuilder.group({
-        name: ['', [Validators.required,]],
-        price: ['', [Validators.required]],
-        color: ['', [Validators.required]],
-        inStock: [false, [Validators.required]],
-        isActive: [false, [Validators.required]],
+        Name: ['', [Validators.required]],
+        Price: ['', [Validators.required]],
+        Color: ['', [Validators.required]],
+        InStock: [false, [Validators.required]],
+        IsActive: [false, [Validators.required]],
         CategoryId: ['', [Validators.required]],
+        ManufacturerId: ['', Validators.required],
         imageFile: [''],
-        addedUserId:[this.currentUser.id],
-        image:[],
-        id:[1]
+        AddedUserId:[this.currentUser.id],
+        Image:[],
+        Id:[1]
       });
 
   }
+  
 
   get f() { return this.form.controls; }
 
   getProductDetails(): void {
     this.$routeParams = this.route.params.subscribe(params => {
       this.productId = params.id;
-      console.log(params)
       if (this.productId) {
         this.getProduct(this.productId)
       }
@@ -78,7 +81,6 @@ export class AddProductComponent implements OnInit {
       this.formType = 'Edit';
       this.submitBtnText = 'Update';
       this.isEditForm = true;
-      console.log(this.product)
 
       this.setFormValues(data);
     })
@@ -86,21 +88,19 @@ export class AddProductComponent implements OnInit {
 
 
   setFormValues(data: any): void {
-    console.log(data);
-    this.form.controls['id'].setValue(data.id)
-    this.form.controls['name'].setValue(data.name)
-      this.form.controls['price'].setValue(data.price)
-      this.form.controls['color'].setValue(data.color)
-      this.form.controls['inStock'].setValue(data.inStock)
-      this.form.controls['isActive'].setValue(data.isActive)
+    this.form.controls['Id'].setValue(data.id)
+    this.form.controls['Name'].setValue(data.name)
+      this.form.controls['Price'].setValue(data.price)
+      this.form.controls['Color'].setValue(data.color)
+      this.form.controls['InStock'].setValue(data.inStock)
+      this.form.controls['IsActive'].setValue(data.isActive)
       this.form.controls['CategoryId'].setValue(data.categoryId)
-      this.form.controls['image'].setValue(data.image);
+      this.form.controls['ManufacturerId'].setValue(data.manufacturerId)
+      this.form.controls['Image'].setValue(data.image);
   }
 
 
   changeCategory(e: any): void {
-    console.log(e.target.value)
-    console.log(this.form.value)
   }
 
   getCategories() {
@@ -110,11 +110,27 @@ export class AddProductComponent implements OnInit {
       });
   }
 
-  onFileChange($event: any) {
-    let file = $event.target.files[0]; 
-    this.form.controls['image'].setValue(file ? file.name : '');
-    console.log(this.form.value)
+  getManufacturers() {
+    this.productMgtService.getAllManufacturers().subscribe(
+      (data: any) => {
+        this.manufacturerList = data      
+      });
+  }
 
+  onFileChange($event: any) {
+    this.imageFile = $event.target.files[0]; 
+    this.form.controls['Image'].setValue(this.imageFile ? this.imageFile.name.toString() : '');
+  }
+
+  uploadFile(image: File): void {
+    if (image.name.toString() !== null) {
+      this.productMgtService.uploadImage(image).subscribe((res)=>{
+        
+      },
+      (err)=>{
+        this.toastr.error('Product Image Upload Faild.');
+      })
+    }
   }
 
   getCurrentUser(): User {
@@ -122,13 +138,11 @@ export class AddProductComponent implements OnInit {
   }
 
   onSubmit(): void {
-    console.log(this.form.value)
     if (this.form.controls['imageFile'].value){
-      console.log('has file')
+      this.uploadFile(this.imageFile);
     }
 
     if(this.form.valid && !this.isEditForm) {
-      console.log('valid')
       this.productMgtService.addProduct(this.form.value).subscribe((res) => {
         this.toastr.success('Product Added Successfully.');
       }, (err)=> {
@@ -137,7 +151,6 @@ export class AddProductComponent implements OnInit {
     }
 
     if(this.form.valid && this.isEditForm){
-      console.log('valid in edit')
       this.productMgtService.updateProduct(this.form.value).subscribe((res) => {
         this.toastr.success('Product Updated Successfully.');
     }, (err)=> {

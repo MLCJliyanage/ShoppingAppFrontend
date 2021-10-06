@@ -4,10 +4,10 @@ import { Routes, RouterModule } from '@angular/router';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
-  // {
-  //   path: 'category',
-  //   loadChildren: () => import('./category/category.module').then(m => m.CategoryModule)
-  // },
+  {
+    path: 'checkout',
+    loadChildren: () => import('./checkout/checkout.module').then(m => m.CheckoutModule)
+  },
   {
     path: 'home',
     loadChildren: () => import('./home/home.module').then(m => m.HomeModule)

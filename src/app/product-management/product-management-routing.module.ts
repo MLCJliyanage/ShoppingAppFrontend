@@ -15,23 +15,31 @@ const routes: Routes = [
   },
   {
     path:'product-detail/:id',
-    component: ProductDetailComponent,
+    component: ProductDetailComponent
+  },
+  {
+    path:'add-product',
+    component: AddProductComponent,
     canActivate: [RoleGuard],
     data: {
       role: Roles.Admin
     }
   },
   {
-    path:'add-product',
-    component: AddProductComponent
-  },
-  {
     path:'edit-product/:id',
-    component: AddProductComponent
+    component: AddProductComponent,
+    canActivate: [RoleGuard],
+    data: {
+      role: Roles.Admin
+    }
   },
   {
     path:'manage-product',
     component: ManageProductComponent,
+    canActivate: [RoleGuard],
+    data: {
+      role: Roles.Admin
+    }
   }
 ];
 

@@ -1,45 +1,45 @@
 <div class="col-md-6 offset-md-3 mt-5">
     <div class="card">
-    <h4 class="card-header">{{formType}}Product</h4>
+    <h4 class="card-header">{{formType}} Product</h4>
     <div class="card-body">
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
             <div class="form-group">
-                <label for="name">Name</label>
-                <input type="text" formControlName="name" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.name.errors }" />
-                <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
-                    <div *ngIf="f.name.errors.required">Product Name is required</div>
+                <label for="Name">Product Name</label>
+                <input type="text" formControlName="Name" class="form-control required" [ngClass]="{ 'is-invalid': f.Name.touched && f.Name.errors }" />
+                <div *ngIf="f.Name.touched && f.Name.errors" class="invalid-feedback">
+                    <div *ngIf="f.Name.errors.required">Product Name is required</div>
                 </div>
             </div>
             <div class="form-group">
-                <label for="price">Price</label>
-                <input type="number" formControlName="price" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.price.errors }" />
-                <div *ngIf="submitted && f.price.errors" class="invalid-feedback">
-                    <div *ngIf="f.price.errors.required">Price is required</div>
+                <label for="Price">Price</label>
+                <input type="number" formControlName="Price" class="form-control required" [ngClass]="{ 'is-invalid': f.Price.touched && f.Price.errors }" />
+                <div *ngIf="f.Price.touched && f.Price.errors" class="invalid-feedback">
+                    <div *ngIf="f.Price.errors.required">Price is required</div>
                 </div>
             </div>
             <div class="form-group">
-                <label for="color">Color</label>
-                <input type="text" formControlName="color" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.color.errors }" />
-                <div *ngIf="submitted && f.color.errors" class="invalid-feedback">
-                    <div *ngIf="f.color.errors.required">Color is required</div>
+                <label for="Color">Color</label>
+                <input type="text" formControlName="Color" class="form-control required" [ngClass]="{ 'is-invalid': submitted && f.Color.errors }" />
+                <div *ngIf="submitted && f.Color.errors" class="invalid-feedback">
+                    <div *ngIf="f.Color.errors.required">Color is required</div>
                 </div>
             </div>
             
             <div class="float-container">
                 <div class="form-group float-child">
-                    <label for="inStock">In Stock</label>
-                    <input type="checkbox" formControlName="inStock" class="col-md-1 form-check-inputform-control" 
-                    [ngClass]="{ 'is-invalid': submitted && f.inStock.errors }" />
-                    <div *ngIf="submitted && f.inStock.errors" class="invalid-feedback">
-                        <div *ngIf="f.inStock.errors.required">inStock is required</div>
+                    <label for="InStock">In Stock</label>
+                    <input type="checkbox" formControlName="InStock" class="col-md-1 form-check-inputform-control" 
+                    [ngClass]="{ 'is-invalid': submitted && f.InStock.errors }" />
+                    <div *ngIf="submitted && f.InStock.errors" class="invalid-feedback">
+                        <div *ngIf="f.InStock.errors.required">inStock is required</div>
                     </div>
                 </div>
                 <div class="form-group float-child">
-                    <label for="isActive">Active</label>
-                    <input type="checkbox" formControlName="isActive" class="col-md-2 form-check-inputform-control" 
-                    [ngClass]="{ 'is-invalid': submitted && f.isActive.errors }" />
-                    <div *ngIf="submitted && f.isActive.errors" class="invalid-feedback">
-                        <div *ngIf="f.isActive.errors.required">required</div>
+                    <label for="IsActive">Active</label>
+                    <input type="checkbox" formControlName="IsActive" class="col-md-2 form-check-inputform-control" 
+                    [ngClass]="{ 'is-invalid': submitted && f.IsActive.errors }" />
+                    <div *ngIf="submitted && f.IsActive.errors" class="invalid-feedback">
+                        <div *ngIf="f.IsActive.errors.required">required</div>
                     </div>
                 </div>          
             </div>
@@ -55,12 +55,26 @@
                 </div>
             </div>
             <div class="form-group">
+                <!-- <label for="CategoryId">Category</label>
+                <input type="text" formControlName="CategoryId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.CategoryId.errors }" /> -->
+                <select class="custom-select" formControlName="ManufacturerId">
+                    <option value="">Manufacturer</option>
+                    <option *ngFor="let manufacturer of manufacturerList" [ngValue]="manufacturer.id">{{manufacturer.name}}</option>
+                  </select>
+                <div *ngIf="submitted && f.ManufacturerId.errors" class="invalid-feedback">
+                    <div *ngIf="f.ManufacturerId.errors.required">required</div>
+                </div>
+            </div>
+            <!-- <div class="form-group">
+                <img  width="50" height="50"  alt="Card image cap">
+            </div> -->
+            <div class="form-group">
                 <label for="imageFile">Image</label>
                 <input type="file" formControlName="imageFile" class="form-control" (change)="onFileChange($event)" />
             </div>
             <div class="form-group">
-                <button [disabled]="loading" class="btn btn-primary">
-                    <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                <button [disabled]="!form.valid" class="btn btn-primary">
+                    <span  class="spinner-border spinner-border-sm mr-1"></span>
                     {{submitBtnText}}
                 </button>
                 <a class="btn btn-link">Cancel</a>
