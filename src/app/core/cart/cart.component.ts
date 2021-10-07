@@ -27,28 +27,33 @@ export class CartComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.getCartDetails();
 
+    // this.productMgtService.getSearchSubject().subscribe(
+    //   (search) => {})  
+  }
+
+
+
+  // Get Order Details.
+  getCartDetails() {
     if (localStorage.getItem('order') !== null) {
       let currentCart = JSON.parse(localStorage.getItem('order') as string) as Order;
       this.cartItems = currentCart.cartItems;
       this.totalAmmount = currentCart.total;
     }
 
-    this.productMgtService.getSearchSubject().subscribe(
-      (search) => {
-      }
-    )
-
     this.cartService.getProducts().subscribe(data => {
       this.cartItems = data;
       this.totalAmmount = this.cartService.getTotalPrice();
+      this.saveCartOnSession();
     });
 
   }
-
   // Remove item from cart list
   removeItemFromCart(productId: any) {
     this.cartService.removeProductFromCart(productId);
+    this.saveCartOnSession();
   }
 
   emptyCart() {
@@ -60,17 +65,21 @@ export class CartComponent implements OnInit {
     if(imageName === null){
       return this.defaultImagePath;
     } else{
-    return this.imagePath+ imageName;
+      return this.imagePath+ imageName;
     }
   }
 
   goToCheckout(): void {
-    let order: Order = {cartItems: this.cartItems, total: this.totalAmmount}
-    localStorage.setItem('order', JSON.stringify(order))
-    this.cartService.setOrder(order);
     
+    this.cartService.setOrder(this.saveCartOnSession());   
     setTimeout(() => {  this.router.navigate(['/checkout']) }, 300);
     
+  }
+
+  saveCartOnSession(): Order {
+    let order: Order = {cartItems: this.cartItems, total: this.totalAmmount}
+    localStorage.setItem('order', JSON.stringify(order))
+    return order;
   }
 
 }

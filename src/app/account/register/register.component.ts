@@ -43,7 +43,7 @@ export class RegisterComponent implements OnInit {
         .subscribe(
           data => {
             this.toastr.success('Registered!');
-            this.router.navigate(['/login'])
+            this.router.navigate(['account/login'])
           },
           error => {
             this.toastr.error('Registration Faild!');

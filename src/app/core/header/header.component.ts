@@ -40,33 +40,23 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit() {
+
     this.getUserFromSession();
-    this.buildSearchForm();
-
-    if (localStorage.getItem('order') !== null) {
-      let currentCart = JSON.parse(localStorage.getItem('order') as string) as Order;
-      this.cartProductCount = currentCart.cartItems.length
-    }
-
     this.getCurrentUser();
-    
+    this.buildSearchForm();
+    this.getCartFromSession()
     this.getCategories();
-
-    this.cartService.getProducts().subscribe(data => {
-      this.cartProductCount = data.length;
-    })
-
-    this.searchProduct();
-     
+    this.getCurrentCart();
+    this.searchProduct(); 
   }
 
 
   getCurrentUser(){
-
     this.accountService.getCurrentUser()
-    .subscribe((user) => {
-      this.currentUser = user
+    .subscribe((user: User) => {
       if(user){
+        this.currentUser = user
+        console.log(this.currentUser.role);
         this.isLoggedIn = true;
         this.userName = user.username
         if(this.getDecodedToken(user.token).role === Roles.Admin){
@@ -77,6 +67,12 @@ export class HeaderComponent implements OnInit {
         this.isNormalUser = true;
       }   
     });
+  }
+
+  getCurrentCart() {
+    this.cartService.getProducts().subscribe(data => {
+      this.cartProductCount = data.length;
+    })
   }
 
   buildSearchForm(): void {
@@ -119,17 +115,23 @@ export class HeaderComponent implements OnInit {
   }
 
   getUserFromSession() {
-    if (localStorage.getItem('user')) {
-      let user: User = JSON.parse(localStorage.getItem('user') as string) as User
-      if(user){
-        this.isLoggedIn = true;
-        this.userName = user.username
-        if(user.role === Roles.Admin){
-          this.isNormalUser = false;
-        }
+      if (localStorage.getItem('user')) {
+        let user: User = JSON.parse(localStorage.getItem('user') as string) as User
+        if(user){
+          this.isLoggedIn = true;
+          this.userName = user.username
+          if(user.role === Roles.Admin){
+            this.isNormalUser = false;
+          }
+      }
     }
   }
 
+  getCartFromSession() {
+    if (localStorage.getItem('order') !== null) {
+      let currentCart = JSON.parse(localStorage.getItem('order') as string) as Order;
+      this.cartProductCount = currentCart.cartItems.length
+    }
   }
 
   getDecodedToken(token: any) {

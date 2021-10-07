@@ -40,7 +40,12 @@ export class LoginComponent implements OnInit {
                   this.toastr.success('Login Success!');
                   if (localStorage.getItem('order') !== null)
                   {
-                    this.router.navigate(['/checkout']) 
+                    if (JSON.parse(localStorage.getItem('order') as string).cartItems.length > 0)
+                    {this.router.navigate(['/checkout'])}
+                    else{
+                      setTimeout(() => {this.router.navigate(['/home'])}, 500);
+                    }
+
                   } else {
                     setTimeout(() => {this.router.navigate(['/home'])}, 500);
                   }

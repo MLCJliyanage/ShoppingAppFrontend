@@ -145,6 +145,8 @@ export class AddProductComponent implements OnInit {
     if(this.form.valid && !this.isEditForm) {
       this.productMgtService.addProduct(this.form.value).subscribe((res) => {
         this.toastr.success('Product Added Successfully.');
+        this.form.reset();
+        this.form.controls['AddedUserId'].setValue(this.currentUser.id);
       }, (err)=> {
         this.toastr.error('Product Add Faild.');
       })

@@ -25,10 +25,7 @@ export class ProductListingComponent implements OnInit {
   constructor(
     private productMgtService: ProductManagementService,
     private accountService: AccountManagementService
-  ) {
-
-    
-  }
+  ) {}
 
   ngOnInit(): void {
 
@@ -41,7 +38,6 @@ export class ProductListingComponent implements OnInit {
 
     if (this.manageInput == 'AdminView') {
       this.isManageView = true;
-      this.getCurrentUser();
       this.currentUser = this.getCurrentUser();
       this.getAllProductsByAdmin(this.currentUser.id);
     }
@@ -52,7 +48,6 @@ export class ProductListingComponent implements OnInit {
           if (search.length > 1) { 
             this.getSearchResults(search); 
           }else { 
-            console.log('inside')
             this.getAllProducts();
           }
         } else {

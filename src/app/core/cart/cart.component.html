@@ -1,15 +1,16 @@
 <div class="product-cart" *ngIf="cartItems && cartItems.length > 0">
     <ul>
       <li *ngFor="let item of cartItems">
-        <img class="card-img-top" [src]="getImagePath(item.product.image)" alt="Card image cap">
+        <img width="20px" class="card-img-top" [src]="getImagePath(item.product.image)" alt="Card image cap">
         <div>
-        <span class="col-md-4">{{item.product.name}}</span> 
-        <span class="col-md-4">{{item.product.price  | currency:'LKR '}}</span>
-        <span class="col-md-4">{{item.quentity}}</span>
-        </div>
-        <button type="button" class="close" aria-label="Remove Item" (click)="removeItemFromCart(item.product.id)">
+        <span class="col-md-1">{{item.product.name}}</span> 
+        <span class="col-md-1">{{item.product.price  | currency:'LKR '}}</span>
+        <span class="col-md-1">{{item.quentity}}</span>
+        <button type="button" class="close col-md-1" aria-label="Remove Item" (click)="removeItemFromCart(item.product.id)">
           <span aria-hidden="true">&times;</span>
-        </button>        
+        </button>
+        </div>
+                
       </li>
     </ul>
     <div class="cart-total">

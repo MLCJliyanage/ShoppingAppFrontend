@@ -1,6 +1,5 @@
 import { Component, Input, OnInit,Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
-import { map } from 'rxjs/operators';
 import { CartService } from 'src/app/shared/services/cart.service';
 import { ProductManagementService } from '../services/product-management.service';
 import { environment } from 'src/environments/environment';
@@ -43,7 +42,6 @@ export class ProductComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-
     // set cart if exsists
     if (localStorage.getItem('order') !== null) {
       let currentCart = JSON.parse(localStorage.getItem('order') as string) as Order;
@@ -57,7 +55,7 @@ export class ProductComponent implements OnInit {
       }
     }
 
-    // get cart items changes
+    // get cart item changes
     this.cartService.products.subscribe(
       (data) =>{
         this.cartList = data

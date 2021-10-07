@@ -39,12 +39,11 @@ export class AccountManagementService {
 
  //setting the username,token and userrole in localstorage
  setCurrentUser(user: User) {
-   this.currentUserSource.next(user);
-  user.role = this.getDecodedToken(user.token).role;
-  user.user = this.getDecodedToken(user.token).username;
-  localStorage.setItem('user', JSON.stringify(user));
-  
-}
+    user.role = this.getDecodedToken(user.token).role;
+    user.user = this.getDecodedToken(user.token).username;
+    localStorage.setItem('user', JSON.stringify(user));
+    this.currentUserSource.next(user);    
+  }
 
   getCurrentUser(): Observable<User>{
     return this.currentUserSource.asObservable();

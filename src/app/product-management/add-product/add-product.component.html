@@ -47,7 +47,7 @@
                 <!-- <label for="CategoryId">Category</label>
                 <input type="text" formControlName="CategoryId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.CategoryId.errors }" /> -->
                 <select class="custom-select" (change)="changeCategory($event)" formControlName="CategoryId">
-                    <option value="">Category</option>
+                    <option value="">Select a Category</option>
                     <option *ngFor="let category of categoryList" [ngValue]="category.id">{{category.name}}</option>
                   </select>
                 <div *ngIf="submitted && f.CategoryId.errors" class="invalid-feedback">
@@ -58,7 +58,7 @@
                 <!-- <label for="CategoryId">Category</label>
                 <input type="text" formControlName="CategoryId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.CategoryId.errors }" /> -->
                 <select class="custom-select" formControlName="ManufacturerId">
-                    <option value="">Manufacturer</option>
+                    <option value="">Select a Manufacturer</option>
                     <option *ngFor="let manufacturer of manufacturerList" [ngValue]="manufacturer.id">{{manufacturer.name}}</option>
                   </select>
                 <div *ngIf="submitted && f.ManufacturerId.errors" class="invalid-feedback">
